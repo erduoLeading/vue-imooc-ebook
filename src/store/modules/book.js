@@ -1,26 +1,82 @@
 const book = {
   state: {
-    test: 1
+    fileName: '',
+    menuVisible: false,
+    settingVisible: -1, //-1,0,1,2,3
+    defaultFontSize: 16,
+    defaultFontFamily: 'Default',
+    fontFamilyVisible: false,
+    defaultTheme: 'default',
+    bookAvailable: false,
+    progress: 0,
+    section: 0,
+    isPaginating: true,
+    currentBook: null,
+    navigation: null,
+    cover: null,
+    metadata: null,
+    paginate: '',
+    pagelist: null,
+    offsetY: 0,
+    isBookmark: null
   },
-  mutations: {// 设置值
-    'SET_TEST': (state, newTest) => {
-      state.test = newTest
-    }
-  },
-  actions: {
-    /*
-      1，参数1：是一个context对象：作用于store类似,但不是同一个东西
-               如果重复使用某个属性用解构{commit,state}
-      2.参数2: 提交的值
-      3.return： 会返回一个promise对象，适合链式编程
-    * */
-    setTest: ({ commit, state }, newTest) => {
-      // 打印旧值和新值
-      // console.log(commit, state)
-      // console.log(state.test, newTest)
-      // 提交
-      // commit('SET_TEST',newTest)//与return作用相同
-      return commit('SET_TEST', newTest)
+  mutations: {
+    'SET_FILENAME': (state, fileName) => {
+      state.fileName = fileName
+    },
+    'SET_MENU_VISIBLE': (state, visible) => {
+      state.menuVisible = visible
+    },
+    'SET_SETTING_VISIBLE': (state, visible) => {
+      state.settingVisible = visible
+    },
+    'SET_DEFAULT_FONT_SIZE': (state, fontSize) => {
+      state.defaultFontSize = fontSize
+    },
+    'SET_DEFAULT_FONT_FAMILY': (state, font) => {
+      state.defaultFontFamily = font
+    },
+    'SET_FONT_FAMILY_VISIBLE': (state, visible) => {
+      state.fontFamilyVisible = visible
+    },
+    'SET_DEFAULT_THEME': (state, theme) => {
+      state.defaultTheme = theme
+    },
+    'SET_BOOK_AVAILABLE': (state, bookAvailable) => {
+      state.bookAvailable = bookAvailable
+    },
+    'SET_PROGRESS': (state, progress) => {
+      state.progress = progress
+    },
+    'SET_SECTION': (state, section) => {
+      state.section = section
+    },
+    'SET_IS_PAGINATING': (state, isPaginating) => {
+      state.isPaginating = isPaginating
+    },
+    'SET_CURRENT_BOOK': (state, currentBook) => {
+      state.currentBook = currentBook
+    },
+    'SET_NAVIGATION': (state, navigation) => {
+      state.navigation = navigation
+    },
+    'SET_COVER': (state, cover) => {
+      state.cover = cover
+    },
+    'SET_METADATA': (state, metadata) => {
+      state.metadata = metadata
+    },
+    'SET_PAGINATE': (state, paginate) => {
+      state.paginate = paginate
+    },
+    'SET_PAGELIST': (state, pagelist) => {
+      state.pagelist = pagelist
+    },
+    'SET_OFFSETY': (state, offsetY) => {
+      state.offsetY = offsetY
+    },
+    'SET_IS_BOOKMARK': (state, isBookmark) => {
+      state.isBookmark = isBookmark
     }
   }
 }

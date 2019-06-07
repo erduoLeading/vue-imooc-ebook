@@ -30,7 +30,7 @@
 .icon-add1:before {
   content: "\e901";
 }
-.icon-back1:before {
+.icon-back:before {
   content: "\e902";
 }
 .icon-book1:before {
@@ -42,13 +42,13 @@
 .icon-bookmark:before {
   content: "\e910";
 }
-.icon-bright1:before {
+.icon-bright:before {
   content: "\e904";
 }
 .icon-cart:before {
   content: "\e911";
 }
-.icon-check1:before {
+.icon-check:before {
   content: "\e905";
 }
 .icon-clock:before {
@@ -66,7 +66,7 @@
 .icon-down1:before {
   content: "\e907";
 }
-.icon-down21:before {
+.icon-down2:before {
   content: "\e908";
 }
 .icon-download:before {
