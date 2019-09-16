@@ -1,7 +1,11 @@
 <template>
   <div class="ebook-reader" @clik="toggleTitleAndMenu">
     <div id="read">
-
+      <div class="ebook-reader-mask"
+      @click="onMaskClick"
+      @touchmove="move"
+      @touchend="moveEnd">
+      </div>
     </div>
   </div>
 </template>
@@ -10,8 +14,8 @@
   // 引入epubjs
   import Epub from 'epubjs'// 导入epub对象
   import {ebookMixin} from '../../utils/mixin' // mapActionsh和 mapGetters,computed(themeList)等共有数据
-  import {getFontSize,saveFontSize,getFontFamily,saveFontFamily,getTheme, saveTheme,getLocation} from '../../utils/localStorage'
-  import {addCss} from '../../utils/book'
+  import {getFontSize, saveFontSize, getFontFamily, saveFontFamily, getTheme, saveTheme, getLocation} from '../../utils/localStorage'
+  import {flatten} from "../../utils/book";
 
   global.ePub = Epub
   export default {
@@ -114,13 +118,14 @@
           event.stopPropagation()
         })
       },
-      init () {
+      initEpub () {
         const url = `${process.env.VUE_APP_RES_URL}/epub/`+this.fileName + `.epub`
         //生成书对象
         this.book = new Epub (url)
         this.setCurrentBook(this.book)
         this.initRendition()// 初始化rendition
         this.initGesture()// 初始化手势
+        this.parseBook() // 书籍的封面 标题 作者等
         // 当书籍加载完毕
         this.book.ready.then(() => {
           return this.book.locations.generate(750*(window.innerWidth/375)*getFontSize(this.fileName) / 16) //加载所有分页
@@ -155,23 +160,90 @@
         this.setFontFamilyVisible(false)
         this.setMenuVisible(!this.menuVisible)
       },
-      hideTitleAndMenu() {
-        this.setMenuVisible(false)
-        this.setSettingVisible(-1)
-        this.setFontFamilyVisible(false)
+      parseBook() {
+        this.book.loaded.cover.then(cover => {
+          this.book.archive.createUrl(cover).then(url =>{
+            this.setCover(url)
+          })
+        })
+        this.book.loaded.metadata.then(metadata => {
+          this.setMetadata(metadata)
+        })
+        this.book.loaded.navigation.then(navigation => {
+          //扁平化
+          navigation = flatten(navigation.toc)
+          //判断等级
+          function find(item, level = 0) {
+            !item.parent ? level : find(navigation.filter(parentItem => parentItem.id === parentItem[0]), ++level)
+          }
+          //定义等级
+          navigation.forEach(item => {
+            item.level = find(item)
+          })
+          this.setNavigation(navigation)
+       })
+
       },
+      move(e) {
+        let offsetY = 0
+        if (this.firstOffsetY) {
+          offsetY = e.changedTouches[0].clientY - this.firstOffsetY
+          this.setOffsetY(offsetY)
+        } else {
+          this.firstOffsetY = e.changedTouches[0].clientY
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      moveEnd(e) {
+        this.setOffsetY(0)
+        this.firstOffsetY = null
+      },
+      onMaskClick(e) {
+        if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
+          return
+        }
+        const offsetX = e.offsetX
+        const width = window.innerWidth
+        if (offsetX > 0 && offsetX < width * 0.3) {
+          this.prevPage()
+        } else if (offsetX > 0 && offsetX > width * 0.7) {
+          this.nextPage()
+        } else {
+          this.toggleTitleAndMenu()
+        }
+      },
+
+
     },
     mounted () {
       // 提交文件名
       const fileName = this.$route.params.fileName.split('|').join('/')
       // 对提交进行初始化
       this.setFileName(fileName).then(() => {
-        this.init()
+        this.initEpub()
       })
     }
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import '../../assets/styles/global';
+  .ebook-reader {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .ebook-reader-mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 150;
+      background: transparent;
+      width: 100%;
+      height: 100%;
+
+    }
+  }
 
 </style>
