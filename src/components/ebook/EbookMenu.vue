@@ -42,7 +42,7 @@
       EbookSlide
     },
     methods: {
-      showSetting(key) {
+      showSetting (key) {
         this.setSettingVisible(key)
       }
     }
@@ -78,3 +78,4 @@
     }
   }
 </style>
+

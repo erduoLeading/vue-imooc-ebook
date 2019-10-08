@@ -4,7 +4,10 @@
       <div class="ebook-reader-mask"
       @click="onMaskClick"
       @touchmove="move"
-      @touchend="moveEnd">
+      @touchend="moveEnd"
+      @mousedown.left="onMouseEnter"
+      @mousemove.left="onMouseMove"
+      @mouseup.left="onMouseEnd">
       </div>
     </div>
   </div>
@@ -66,7 +69,8 @@
         this.rendition = this.book.renderTo('read', {
           width: innerWidth,
           height: innerHeight,
-          method: 'default' //兼容微信正常使用
+          method: 'default', //兼容微信正常使用
+          // flow: 'scrolled'
         })
         //获取location
         const location = getLocation(this.fileName)
@@ -129,7 +133,32 @@
         // 当书籍加载完毕
         this.book.ready.then(() => {
           return this.book.locations.generate(750*(window.innerWidth/375)*getFontSize(this.fileName) / 16) //加载所有分页
-            .then(() => {
+            .then( locations => {
+              this.navigation.forEach(nav => {
+                nav.pagelist = []
+              })
+              locations.forEach(item => {
+                const loc = item.match(/\[(.*)\]!/)[1]
+                this.navigation.forEach(nav => {
+                  if (nav.href) {
+                    //xxx.html
+                    const href = nav.href.match(/^(.*)\.html$/)[1]
+                    if(href === loc) {
+                      nav.pagelist.push(item)
+                    }
+                  }
+                })
+                let currentPage = 1
+                this.navigation.forEach((nav, index) => {
+                  if (index ===0) {
+                    nav.page = 1
+                  } else  {
+                    nav.page = currentPage
+                  }
+                  currentPage += nav.pagelist.length + 1
+                })
+              })
+              this.setPagelist(locations)
               this.setBookAvailable(true)
               this.refreshLocation()
             })
@@ -192,12 +221,48 @@
         } else {
           this.firstOffsetY = e.changedTouches[0].clientY
         }
-        e.preventDefault()
+        e.preventDefault() // 防止微信移动端下拉出现样式错乱
         e.stopPropagation()
       },
       moveEnd(e) {
         this.setOffsetY(0)
         this.firstOffsetY = null
+      },
+      onMouseEnter(e) {
+        this.mouseState = 1
+        this.mouseStartTime = e.timeStamp
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      onMouseMove(e) {
+        if (this.mouseState === 1) {
+          this.mouseState = 2
+        } else if (this.mouseState === 2) {
+          let offsetY = 0
+          if (this.firstOffsetY) {
+            offsetY = e.clientY - this.firstOffsetY
+            this.setOffsetY(offsetY)
+          } else {
+            this.firstOffsetY = e.clientY // 初次位置给予
+          }
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      onMouseEnd(e) {
+        if (this.mouseState === 2) {
+          this.setOffsetY(0)
+          this.firstOffsetY = null
+          this.mouseState = 3
+        } else {
+          this.mouseState = 4
+        }
+        const time = e.timeStamp - this.mouseStartTime
+        if (time < 100) {
+          this.mouseState = 4
+        }
+        e.preventDefault()
+        e.stopPropagation()
       },
       onMaskClick(e) {
         if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
@@ -227,23 +292,22 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  @import '../../assets/styles/global';
+
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/styles/global";
+
   .ebook-reader {
     width: 100%;
     height: 100%;
     overflow: hidden;
-
     .ebook-reader-mask {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 150;
       background: transparent;
+      z-index: 150;
       width: 100%;
       height: 100%;
-
     }
   }
-
 </style>

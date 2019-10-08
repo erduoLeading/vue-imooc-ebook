@@ -79,17 +79,36 @@
         }
         const currentLocation = this.currentBook.rendition.currentLocation()
         const cfibase = currentLocation.start.cfi.replace(/!.*/, '')
-        const cfistart = currentLocation.start.cfi.replace(/.*!/, '').replace(/\)$/, '')
-        const cfiend = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)$/, '')
+        const cfistart = currentLocation.start.cfi.replace(/.*!/, '').replace(/\)/, '')
+        const cfiend = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)/, '')
+        // console.log(currentLocation,cfibase,cfistart,cfiend)
         const cfirange = `${cfibase}!,${cfistart},${cfiend})`
+        // console.log(cfirange)
         this.currentBook.getRange(cfirange).then(range => {
-          const text = range.toString().replace(/\s\s/g, '')
+          const text = range.toString().replace(/\s\s/g,'')
           this.bookmark.push({
             cfi: currentLocation.start.cfi,
-            text: text
+            text,
           })
           saveBookmark(this.fileName, this.bookmark)
         })
+        // this.bookmark = getBookmark(this.fileName)
+        // if (!this.bookmark) {
+        //   this.bookmark = []
+        // }
+        // const currentLocation = this.currentBook.rendition.currentLocation()
+        // const cfibase = currentLocation.start.cfi.replace(/!.*/, '')
+        // const cfistart = currentLocation.start.cfi.replace(/.*!/, '').replace(/\)$/, '')
+        // const cfiend = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)$/, '')
+        // const cfirange = `${cfibase}!,${cfistart},${cfiend})`
+        // this.currentBook.getRange(cfirange).then(range => {
+        //   const text = range.toString().replace(/\s\s/g, '')
+        //   this.bookmark.push({
+        //     cfi: currentLocation.start.cfi,
+        //     text: text
+        //   })
+        //   saveBookmark(this.fileName, this.bookmark)
+        // })
       },
       removeBookmark() {
         const currentLocation = this.currentBook.rendition.currentLocation()
@@ -99,6 +118,13 @@
           saveBookmark(this.fileName, this.bookmark.filter(item => item.cfi !== cfi))
           this.setIsBookmark(false)
         }
+        // const currentLocation = this.currentBook.rendition.currentLocation()
+        // const cfi = currentLocation.start.cfi
+        // this.bookmark = getBookmark(this.fileName)
+        // if (this.bookmark) {
+        //   saveBookmark(this.fileName, this.bookmark.filter(item => item.cfi !== cfi))
+        //   this.setIsBookmark(false)
+        // }
       },
       restore() {
         // 状态4：归位

@@ -27,7 +27,7 @@
 .icon-A1:before {
   content: "\e900";
 }
-.icon-add1:before {
+.icon-add:before {
   content: "\e901";
 }
 .icon-back:before {
@@ -57,7 +57,7 @@
 .icon-close:before {
   content: "\e913";
 }
-.icon-close-circle-fill1:before {
+.icon-close-circle-fill:before {
   content: "\e906";
 }
 .icon-cn:before {
@@ -75,7 +75,7 @@
 .icon-download-remove:before {
   content: "\e916";
 }
-.icon-en1:before {
+.icon-en:before {
   content: "\e909";
 }
 .icon-forward:before {
@@ -108,7 +108,7 @@
 .icon-play_pause1:before {
   content: "\e90b";
 }
-.icon-private1:before {
+.icon-private:before {
   content: "\e90c";
 }
 .icon-private-see1:before {

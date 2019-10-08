@@ -10,10 +10,10 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'eslint-disable-next-line':'off',
-    'indent': 'off',
-    'eslint-disable ': 'off',
-    'spcae-before-function-paren':'off'
+    'eslint-disable-next-line': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'indent': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'eslint-disable ': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'space-before-function-paren':process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
   parserOptions: {
     parser: 'babel-eslint'

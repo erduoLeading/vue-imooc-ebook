@@ -2,11 +2,11 @@ const book = {
   state: {
     fileName: '',
     menuVisible: false,
-    settingVisible: -1, //-1,0,1,2,3
+    settingVisible: -1,
     defaultFontSize: 16,
     defaultFontFamily: 'Default',
     fontFamilyVisible: false,
-    defaultTheme: 'default',
+    defaultTheme: 'Default',
     bookAvailable: false,
     progress: 0,
     section: 0,

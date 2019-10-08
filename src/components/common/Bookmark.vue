@@ -12,7 +12,7 @@
       color: String
     },
     computed: {
-      style() {
+      style () {
         if (this.color) {
           return {
             borderColor: `${this.color} ${this.color} transparent ${this.color}`
@@ -23,13 +23,13 @@
       }
     },
     methods: {
-      refresh() {
+      refresh () {
         if (this.height && this.width) {
           this.$refs.bookmark.style.borderWidth = `${px2rem(this.height - 5)}rem ${px2rem(this.width / 2)}rem ${px2rem(5)}rem ${px2rem(this.width / 2)}rem`
         }
       }
     },
-    mounted() {
+    mounted () {
       this.refresh()
     }
   }

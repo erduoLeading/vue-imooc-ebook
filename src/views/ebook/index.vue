@@ -1,9 +1,11 @@
 <template>
   <div class="ebook" ref="ebook">
+    <ebook-header></ebook-header>
     <ebook-title></ebook-title>
     <ebook-reader></ebook-reader>
     <ebook-menu></ebook-menu>
     <ebook-bookmark></ebook-bookmark>
+    <ebook-footer></ebook-footer>
   </div>
 </template>
 
@@ -12,6 +14,8 @@
   import EbookTitle from '../../components/ebook/EbookTitle'
   import EbookMenu from '../../components/ebook/EbookMenu'
   import EbookBookmark from '../../components/ebook/EbookBookmark'
+  import EbookHeader from '../../components/ebook/EbookHeader'
+  import EbookFooter from '../../components/ebook/EbookFooter'
   import { getReadTime, saveReadTime } from '../../utils/localStorage'
   import { ebookMixin } from '../../utils/mixin'
 
@@ -22,10 +26,12 @@
       EbookReader,
       EbookTitle,
       EbookMenu,
-      EbookBookmark
+      EbookBookmark,
+      EbookHeader,
+      EbookFooter
     },
-    watch:{
-      offsetY(v) {
+    watch: {
+      offsetY (v) {
         if (!this.menuVisible && this.bookAvailable) {
           if (v > 0) {
             this.move(v)
@@ -37,15 +43,15 @@
 
     },
     methods: {
-      restore(){
+      restore () {
         this.$refs.ebook.style.top = 0
         this.$refs.ebook.style.transition = ' all .2s linear'
-        setTimeout(()=>{
+        setTimeout(() => {
           this.$refs.ebook.style.transition = ``
-        },200)
+        }, 200)
       },
-      move(v){
-        this.$refs.ebook.style.top = v + "px"
+      move (v) {
+        this.$refs.ebook.style.top = v + `px`
       },
       startLoopReadTime () {
         let readTime = getReadTime(this.fileName)
@@ -58,7 +64,6 @@
           if (readTime % 30 === 0) {
             saveReadTime(this.fileName, readTime)
           }
-
         }, 1000)
       }
     },
